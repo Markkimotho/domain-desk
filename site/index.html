@@ -1,100 +1,40 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta
-      name="description"
-      content="Look up domain registration and DNS records. Evidence, not a scam verdict."
-    />
-    <title>Domain desk</title>
-    <link rel="stylesheet" href="./style.css" />
-  </head>
-  <body>
-    <main class="shell">
-      <div class="utility-bar">
-        <span>THE DOMAIN DESK</span><span>INDEPENDENT INTERNET RESEARCH</span>
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Understand a website address. Live DNS, registration and email configuration, explained simply.">
+  <title>Domain Desk — understand an address</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <main class="shell">
+    <nav aria-label="Site links"><span>DNS / RDAP</span><a href="https://markkimotho.github.io/projects/">More projects</a></nav>
+    <header>
+      <h1>Domain desk.</h1>
+      <p class="intro">DNS records, registration &amp; a few useful clues.</p>
+    </header>
+    <form id="lookup">
+      <label for="domain">Domain or website URL</label>
+      <div class="input-row"><input id="domain" name="domain" type="text" inputmode="url" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="example.com or https://…" required aria-describedby="input-help"><button type="submit">Look up</button></div>
+      <p id="input-help">A domain or full URL will do.</p>
+    </form>
+    <div class="examples"><span>Try:</span><button type="button" data-example="wikipedia.org">wikipedia.org</button><button type="button" data-example="www.bbc.co.uk">www.bbc.co.uk</button></div>
+    <div class="status-row"><p id="status" role="status" aria-live="polite">No account. No saved lookup history.</p><button id="cancel" class="text-button" hidden>Cancel lookup</button></div>
+    <section id="results" hidden aria-label="Lookup results">
+      <div class="result-heading"><div><p class="eyebrow">Lookup results</p><h2 id="result-domain"></h2><p id="scope" class="muted"></p></div><button id="download" class="secondary" disabled>Export JSON ↓</button></div>
+      <div id="summary" class="summary"><span class="signal" aria-hidden="true"></span><div><h3 id="summary-title"></h3><p id="summary-text"></p></div></div>
+      <p id="address-note" class="note"></p>
+      <div class="cards">
+        <article><p class="eyebrow">Registration</p><h3 id="registration">Checking registration…</h3><p id="age" class="muted"></p><dl id="registration-details"></dl><p id="rdap-note" class="note"></p><a id="registration-link" target="_blank" rel="noopener noreferrer">View registration source ↗</a></article>
+        <article><p class="eyebrow">Email & DNS security</p><h3>Configuration clues</h3><dl id="email-details"><dt>Status</dt><dd>Checking records…</dd></dl><p class="note">These settings describe domain configuration. They do not establish who operates a website or whether it is trustworthy.</p></article>
       </div>
-      <header>
-        <p class="masthead-kicker">A small corner of the World Wide Web</p>
-        <h1>
-          Domain <em>Desk</em><span class="star" aria-hidden="true">✳</span>
-        </h1>
-        <p>Look under the hood of a website address.</p>
-      </header>
-      <nav aria-label="Site links">
-        <a href="https://markkimotho.github.io/projects/"
-          >← Back to Mark's projects</a
-        ><span aria-hidden="true">◆</span><a href="#lookup">Start a lookup</a
-        ><span aria-hidden="true">◆</span><a href="#about">About this tool</a>
-      </nav>
-      <div class="intro">
-        <p class="eyebrow">Internet field notes / No. 01</p>
-        <h2>Who’s behind that address?</h2>
-        <p>
-          Look up registration dates and live DNS records. These are clues, not
-          proof that a website is safe or unsafe.
-        </p>
-      </div>
-      <form id="lookup">
-        <div class="form-heading">
-          <span aria-hidden="true">▣</span
-          ><label for="domain">Enter a domain or URL</label>
-        </div>
-        <div class="input-row">
-          <input
-            id="domain"
-            name="domain"
-            type="text"
-            inputmode="url"
-            autocomplete="url"
-            spellcheck="false"
-            placeholder="example.com"
-            required
-          /><button type="submit">SEARCH THE WEB »</button>
-        </div>
-      </form>
-      <p id="status" class="status" role="status" aria-live="polite">
-        Ready when you are. Try a domain to begin.
-      </p>
-      <section id="results" hidden aria-label="Lookup results">
-        <div class="results-heading">
-          <span>LOOKUP RESULTS FOR</span>
-          <h2 id="result-domain"></h2>
-        </div>
-        <div class="results-grid">
-          <article>
-            <h3>Registration</h3>
-            <p id="registration"></p>
-            <p id="age"></p>
-            <p id="rdap-note" class="note"></p>
-          </article>
-          <article>
-            <h3>DNS records</h3>
-            <div id="records"></div>
-          </article>
-        </div>
-        <div class="next">
-          <h3>Before you trust a site</h3>
-          <p>
-            Domain age and DNS are not a reputation check. Check the exact URL,
-            compare it with the organisation’s known website, and use a
-            dedicated security report.
-          </p>
-          <a id="safety-link" target="_blank" rel="noopener noreferrer"
-            >Open Google Safe Browsing report ↗</a
-          >
-        </div>
-      </section>
-      <footer id="about">
-        <div class="footer-mark">DD<span aria-hidden="true">✳</span></div>
-        <p>
-          Registration data: public RDAP service. DNS: Cloudflare
-          DNS-over-HTTPS.<br />No lookup history is saved here.
-        </p>
-        <p class="footer-small">Handmade for the curious web.</p>
-      </footer>
-    </main>
-    <script type="module" src="./app.js"></script>
-  </body>
+      <details id="dns-details"><summary>Explore DNS records <span id="record-count"></span></summary><p class="note">Addresses and aliases describe the exact hostname. Other records describe the registered domain. TTL is the resolver’s remaining cache lifetime.</p><div id="records"></div></details>
+      <aside class="next"><h3>Considering whether to trust this site?</h3><p>Compare the exact address with the organisation’s known website. DNS and domain age cannot verify a business, a payment page, or the content of a link.</p><div class="links"><a id="safety-link" target="_blank" rel="noopener noreferrer">Google Safe Browsing ↗</a><a id="icann-link" target="_blank" rel="noopener noreferrer">ICANN registration lookup ↗</a></div><p class="note">External reports open on request. Their findings are not included in this lookup.</p></aside>
+      <p id="checked-at" class="note"></p>
+    </section>
+    <details id="about" class="about"><summary>About this tool &amp; your privacy</summary><div><p>DNS maps names to internet services. Registration records describe the registered domain. We bring both together, with the source and uncertainty visible.</p><p>Lookups go directly to Cloudflare, Google (as a fallback), IANA and public RDAP services. Some registries restrict browser access or publish limited data. Missing information is shown as unavailable.</p><p>This tool does not test website uptime, TLS certificates or page safety. Full URLs are reduced to hostnames before lookup; paths and query strings are not sent. Providers receive the queried names and your IP address.</p></div></details>
+    <footer>Public records. No saved history.</footer>
+  </main>
+  <script type="module" src="./app.js"></script>
+</body>
 </html>

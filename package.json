@@ -1,1 +1,12 @@
-{"name":"dns-resolver-x","private":true,"type":"module","scripts":{"test":"node --test"}}
+{
+  "name": "domain-desk",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test",
+    "vendor": "node scripts/vendor.mjs"
+  },
+  "dependencies": {
+    "tldts": "7.4.19"
+  }
+}
